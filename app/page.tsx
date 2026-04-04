@@ -283,42 +283,41 @@ export default function Home() {
 
         </div>{/* end left column */}
 
-        {/* Right — completed + calendar */}
-        <div className="w-72 flex-shrink-0 space-y-4">
+        {/* Middle — completed tasks drop zone */}
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragOverZone("completed"); }}
+          onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOverZone(null); }}
+          onDrop={(e) => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData("todoId");
+            const todo = todos.find((t) => t.id === id);
+            if (todo && !todo.completed) toggleTodo(id);
+            setDragOverZone(null);
+          }}
+          className={`flex-1 space-y-2 min-h-[100px] rounded-xl p-3 transition-all duration-150 bg-white/50 backdrop-blur-sm border border-white ${
+            dragOverZone === "completed"
+              ? "bg-emerald-50/80 ring-2 ring-emerald-300 ring-dashed"
+              : ""
+          }`}
+        >
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide px-1 mb-2">
+            Completed · {filteredTodos.filter((t) => t.completed).length}
+          </p>
+          {filteredTodos.filter((t) => t.completed).length === 0 ? (
+            <div className="text-center py-10 text-slate-300 text-xs">
+              Drag a task here to mark it done
+            </div>
+          ) : (
+            <AnimatePresence>
+              {filteredTodos.filter((t) => t.completed).map((todo) => (
+                <TodoItem key={todo.id} todo={todo} onToggle={toggleTodo} onDelete={handleDelete} onEdit={editTodo} />
+              ))}
+            </AnimatePresence>
+          )}
+        </div>
 
-          {/* Completed tasks drop zone */}
-          <div
-            onDragOver={(e) => { e.preventDefault(); setDragOverZone("completed"); }}
-            onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOverZone(null); }}
-            onDrop={(e) => {
-              e.preventDefault();
-              const id = e.dataTransfer.getData("todoId");
-              const todo = todos.find((t) => t.id === id);
-              if (todo && !todo.completed) toggleTodo(id);
-              setDragOverZone(null);
-            }}
-            className={`space-y-2 min-h-[100px] rounded-xl p-3 transition-all duration-150 bg-white/50 backdrop-blur-sm border border-white ${
-              dragOverZone === "completed"
-                ? "bg-emerald-50/80 ring-2 ring-emerald-300 ring-dashed"
-                : ""
-            }`}
-          >
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide px-1 mb-2">
-              Completed · {filteredTodos.filter((t) => t.completed).length}
-            </p>
-            {filteredTodos.filter((t) => t.completed).length === 0 ? (
-              <div className="text-center py-6 text-slate-300 text-xs">
-                Drag a task here to mark it done
-              </div>
-            ) : (
-              <AnimatePresence>
-                {filteredTodos.filter((t) => t.completed).map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} onToggle={toggleTodo} onDelete={handleDelete} onEdit={editTodo} />
-                ))}
-              </AnimatePresence>
-            )}
-          </div>
-
+        {/* Right — calendar */}
+        <div className="w-64 flex-shrink-0">
           <Calendar
             todos={todos}
             selectedDate={selectedDate}
