@@ -44,7 +44,7 @@ export default function AuthForm({ onAuth }: AuthFormProps) {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">Task Tracker</h1>
-          <p className="text-slate-400 mt-1 text-sm">Stay on top of what matters</p>
+          <p className="text-slate-400 mt-1 text-sm">Manidhar's command center ⚡</p>
         </div>
 
         {/* Card */}

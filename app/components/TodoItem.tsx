@@ -89,10 +89,15 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemP
   return (
     <motion.div
       layout
+      draggable
+      onDragStart={(e: any) => {
+        e.dataTransfer?.setData("todoId", todo.id);
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+      }}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -40, transition: { duration: 0.2 } }}
-      className={`rounded-xl border-l-4 border border-slate-100 transition-colors duration-150 overflow-hidden
+      className={`rounded-xl border-l-4 border border-slate-100 transition-colors duration-150 overflow-hidden cursor-grab active:cursor-grabbing
         ${todo.completed
           ? "bg-white/40 border-l-slate-200 opacity-60"
           : `bg-white/70 backdrop-blur-sm hover:bg-white/90 ${priority.border}`
