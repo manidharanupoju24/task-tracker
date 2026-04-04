@@ -182,31 +182,21 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="flex gap-6 items-start">
-        {/* Left — main content */}
-        <div className="flex-1 space-y-5">
-        {/* Error banner */}
+      {/* Top — full width: error, stats, add form, filter/sort */}
+      <div className="space-y-5 mb-6">
         {error && (
           <div className="bg-rose-50 border border-rose-200 text-rose-600 text-sm rounded-xl px-4 py-3 flex items-center justify-between">
             <span>⚠️ {error}</span>
-            <button
-              onClick={() => setError(null)}
-              className="ml-4 text-rose-400 hover:text-rose-600 font-medium"
-            >
-              Dismiss
-            </button>
+            <button onClick={() => setError(null)} className="ml-4 text-rose-400 hover:text-rose-600 font-medium">Dismiss</button>
           </div>
         )}
 
-        {/* Stats */}
         {todos.length > 0 && (
           <StatCards total={todos.length} active={activeCount} completed={completedCount} overdue={overdueCount} />
         )}
 
-        {/* Add Todo */}
         <AddTodoForm onAdd={addTodo} />
 
-        {/* Filter & Sort Bar */}
         {todos.length > 0 && (
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white shadow-sm p-4 space-y-3">
             <FilterBar
@@ -219,8 +209,6 @@ export default function Home() {
               completedCount={completedCount}
               onClearCompleted={clearCompleted}
             />
-
-            {/* Sort */}
             <div className="flex items-center gap-2 pt-1 border-t border-slate-50">
               <span className="text-xs text-slate-400 font-medium">Sort by:</span>
               {(["created", "priority", "dueDate"] as const).map((s) => (
@@ -228,9 +216,7 @@ export default function Home() {
                   key={s}
                   onClick={() => setSortBy(s)}
                   className={`text-xs px-2.5 py-1 rounded-lg transition-colors ${
-                    sortBy === s
-                      ? "bg-indigo-100 text-indigo-600 font-medium"
-                      : "text-slate-400 hover:text-slate-600"
+                    sortBy === s ? "bg-indigo-100 text-indigo-600 font-medium" : "text-slate-400 hover:text-slate-600"
                   }`}
                 >
                   {s === "created" ? "Newest" : s === "priority" ? "Priority" : "Due Date"}
@@ -239,8 +225,12 @@ export default function Home() {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Active tasks drop zone */}
+      {/* Bottom — three columns: Active | Completed | Calendar */}
+      <div className="flex gap-6 items-start">
+
+        {/* Active tasks */}
         <div
           onDragOver={(e) => { e.preventDefault(); setDragOverZone("active"); }}
           onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOverZone(null); }}
@@ -251,10 +241,8 @@ export default function Home() {
             if (todo && todo.completed) toggleTodo(id);
             setDragOverZone(null);
           }}
-          className={`space-y-2 min-h-[64px] rounded-xl p-2 transition-all duration-150 ${
-            dragOverZone === "active"
-              ? "bg-violet-50/80 ring-2 ring-violet-300 ring-dashed"
-              : ""
+          className={`flex-1 space-y-2 min-h-[120px] rounded-xl p-3 transition-all duration-150 bg-white/50 backdrop-blur-sm border border-white ${
+            dragOverZone === "active" ? "bg-violet-50/80 ring-2 ring-violet-300 ring-dashed" : ""
           }`}
         >
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide px-1 mb-2">
@@ -281,9 +269,7 @@ export default function Home() {
           )}
         </div>
 
-        </div>{/* end left column */}
-
-        {/* Middle — completed tasks drop zone */}
+        {/* Completed tasks */}
         <div
           onDragOver={(e) => { e.preventDefault(); setDragOverZone("completed"); }}
           onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOverZone(null); }}
@@ -294,10 +280,8 @@ export default function Home() {
             if (todo && !todo.completed) toggleTodo(id);
             setDragOverZone(null);
           }}
-          className={`flex-1 space-y-2 min-h-[100px] rounded-xl p-3 transition-all duration-150 bg-white/50 backdrop-blur-sm border border-white ${
-            dragOverZone === "completed"
-              ? "bg-emerald-50/80 ring-2 ring-emerald-300 ring-dashed"
-              : ""
+          className={`flex-1 space-y-2 min-h-[120px] rounded-xl p-3 transition-all duration-150 bg-white/50 backdrop-blur-sm border border-white ${
+            dragOverZone === "completed" ? "bg-emerald-50/80 ring-2 ring-emerald-300 ring-dashed" : ""
           }`}
         >
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide px-1 mb-2">
@@ -316,14 +300,11 @@ export default function Home() {
           )}
         </div>
 
-        {/* Right — calendar */}
+        {/* Calendar */}
         <div className="w-64 flex-shrink-0">
-          <Calendar
-            todos={todos}
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
-          />
+          <Calendar todos={todos} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         </div>
+
       </div>
       </div>
     </main>
