@@ -22,7 +22,11 @@
     "eslint": "^10",
     "eslint-config-next": "16.2.2",
     "postcss": "^8",
+<<<<<<< HEAD
     "tailwindcss": "^4.2.2",
+=======
+    "tailwindcss": "3.4.19",
+>>>>>>> 80a2f36 (Pin tailwindcss to 3.4.19 to fix Vercel build)
     "typescript": "^5"
   }
 }
