@@ -9,30 +9,39 @@ const PHASES = {
 
 type Phase = keyof typeof PHASES;
 
-function playBeep() {
-  try {
-    const ctx = new AudioContext();
-    const beeps = [0, 0.3, 0.6];
-    beeps.forEach((delay) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(880, ctx.currentTime + delay);
-      gain.gain.setValueAtTime(0.4, ctx.currentTime + delay);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.25);
-      osc.start(ctx.currentTime + delay);
-      osc.stop(ctx.currentTime + delay + 0.25);
-    });
-  } catch {}
-}
-
 export default function PomodoroTimer() {
   const [phase, setPhase] = useState<Phase>("work");
   const [timeLeft, setTimeLeft] = useState(PHASES.work.duration);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  function getAudioContext() {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new AudioContext();
+    }
+    return audioCtxRef.current;
+  }
+
+  function playBeep() {
+    try {
+      const ctx = getAudioContext();
+      ctx.resume().then(() => {
+        [0, 0.3, 0.6].forEach((delay) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(880, ctx.currentTime + delay);
+          gain.gain.setValueAtTime(0.4, ctx.currentTime + delay);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.25);
+          osc.start(ctx.currentTime + delay);
+          osc.stop(ctx.currentTime + delay + 0.25);
+        });
+      });
+    } catch {}
+  }
 
   const total = PHASES[phase].duration;
   const color = PHASES[phase].color;
@@ -195,7 +204,7 @@ export default function PomodoroTimer() {
       {/* Controls */}
       <div className="flex gap-2">
         <button
-          onClick={() => setIsRunning((v) => !v)}
+          onClick={() => { getAudioContext(); setIsRunning((v) => !v); }}
           className="flex-1 py-2 rounded-xl text-sm font-semibold text-white transition-all active:scale-95"
           style={{ backgroundColor: color }}
         >
