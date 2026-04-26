@@ -10,6 +10,7 @@ import FilterBar from "./components/FilterBar";
 import StatCards from "./components/StatCards";
 import AuthForm from "./components/AuthForm";
 import Calendar from "./components/Calendar";
+import PomodoroTimer from "./components/PomodoroTimer";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
@@ -300,9 +301,10 @@ export default function Home() {
           )}
         </div>
 
-        {/* Calendar */}
-        <div className="w-64 flex-shrink-0">
+        {/* Calendar + Pomodoro */}
+        <div className="w-64 flex-shrink-0 space-y-4">
           <Calendar todos={todos} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+          <PomodoroTimer />
         </div>
 
       </div>
