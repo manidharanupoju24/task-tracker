@@ -204,7 +204,7 @@ export default function PomodoroTimer() {
       {/* Controls */}
       <div className="flex gap-2">
         <button
-          onClick={() => { getAudioContext(); setIsRunning((v) => !v); }}
+          onClick={() => { getAudioContext(); playBeep(); setIsRunning((v) => !v); }}
           className="flex-1 py-2 rounded-xl text-sm font-semibold text-white transition-all active:scale-95"
           style={{ backgroundColor: color }}
         >
