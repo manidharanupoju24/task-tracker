@@ -11,6 +11,7 @@ import StatCards from "./components/StatCards";
 import AuthForm from "./components/AuthForm";
 import Calendar from "./components/Calendar";
 import PomodoroTimer from "./components/PomodoroTimer";
+import DigitalClock from "./components/DigitalClock";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
@@ -196,6 +197,7 @@ export default function Home() {
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">Task Tracker</h1>
           <p className="text-slate-500 mt-1 text-sm">Manidhar's command center ⚡</p>
         </div>
+        <DigitalClock />
         <button
           onClick={handleSignOut}
           className="text-xs text-slate-500 hover:text-violet-600 border border-slate-200 hover:border-violet-300 px-3 py-1.5 rounded-lg transition-colors bg-white/60"
