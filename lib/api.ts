@@ -15,6 +15,16 @@ export function setToken(token: string): void {
 
 export function clearToken(): void {
   localStorage.removeItem("auth_token");
+  localStorage.removeItem("login_time");
+}
+
+export function setLoginTime(): void {
+  localStorage.setItem("login_time", Date.now().toString());
+}
+
+export function getLoginTime(): number | null {
+  const t = localStorage.getItem("login_time");
+  return t ? parseInt(t, 10) : null;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -65,6 +75,7 @@ export async function signIn(email: string, password: string): Promise<string> {
   });
   const data = await handleResponse<{ access_token: string }>(res);
   setToken(data.access_token);
+  setLoginTime();
   return data.access_token;
 }
 

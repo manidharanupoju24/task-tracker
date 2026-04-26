@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Todo, FilterType, Category } from "./types";
-import { getTodos, createTodo, updateTodo, deleteTodo, getToken, signOut } from "@/lib/api";
+import { getTodos, createTodo, updateTodo, deleteTodo, getToken, signOut, getLoginTime } from "@/lib/api";
 import { AnimatePresence } from "framer-motion";
 import AddTodoForm from "./components/AddTodoForm";
 import TodoItem from "./components/TodoItem";
@@ -25,12 +25,33 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [dragOverZone, setDragOverZone] = useState<"active" | "completed" | null>(null);
 
+  const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in ms
+
   // Check for existing token on mount
   useEffect(() => {
     const existing = getToken();
-    setToken(existing);
+    const loginTime = getLoginTime();
+    if (existing && loginTime && Date.now() - loginTime > SESSION_DURATION) {
+      signOut();
+      setToken(null);
+    } else {
+      setToken(existing);
+    }
     setAuthChecked(true);
   }, []);
+
+  // Auto sign-out after 1 hour
+  useEffect(() => {
+    if (!token) return;
+    const interval = setInterval(() => {
+      const loginTime = getLoginTime();
+      if (loginTime && Date.now() - loginTime > SESSION_DURATION) {
+        handleSignOut();
+        setError("Your session expired. Please sign in again.");
+      }
+    }, 60 * 1000); // check every minute
+    return () => clearInterval(interval);
+  }, [token]);
 
   // Load todos whenever we have a valid token
   useEffect(() => {

@@ -216,13 +216,6 @@ export default function PomodoroTimer() {
         >
           ↺
         </button>
-        <button
-          onClick={() => { getAudioContext(); playBeep(); }}
-          className="px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
-          title="Test beep"
-        >
-          🔔
-        </button>
       </div>
     </div>
   );
